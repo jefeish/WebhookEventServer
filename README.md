@@ -41,7 +41,7 @@ For security reasons, we only accept incoming requests from our GitHub organizat
 C8A1A357-5252-452D-B46D-BF9E325A99D6
 ```
 You can provide any 'string' but we recommend using something similar to the 'uuidgen'.<br>
-See snap shot of Webhooks setup section for secrets <br>
+See snap shot of *Webhooks setup section* for secrets <br>
 <img alt="GitHub" src="docs/webhook-secret.png" width="10%">
 ___
 # Install - The Webhook Listener Server <a id="install"></a>
