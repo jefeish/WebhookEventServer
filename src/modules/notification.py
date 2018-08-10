@@ -22,7 +22,6 @@ class command():
         log.info("executing 'create_notification' module")
 
         github_api_url = self.server_config['github_api']
-        repo_name = 'repo1'
-        repo_owner = self.server_config['organization']
-        url = '%s/repos/%s/%s/issues' % (github_api_url, repo_owner, repo_name)
         headers = {'x-webhook-action': 'create_notification'}
+        
+        # TODO - implement some notification code...
