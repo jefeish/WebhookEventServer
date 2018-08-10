@@ -36,7 +36,7 @@ For creating tokens see,  **[GitHub - Creating a personal access token...](https
 ## Create a 'Secret' String for use with GitHub Webhooks
 For security reasons, we only accept incoming requests from our GitHub organization !
 <br>
-**Sample Linux command for a 'unique' secret string**
+**Sample Linux command for a secret string**
 ```
 > uuidgen
 C8A1A357-5252-452D-B46D-BF9E325A99D6
