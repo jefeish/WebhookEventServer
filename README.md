@@ -46,7 +46,7 @@ You can provide any 'string' but we recommend using something similar to the 'uu
 
 ## Create a Webhook in your GitHub Organization
 In your GitHub Organization create a *Webhook* for an event (for testing purposes select all events). <br>
-In the Webhook setup (organization/settings/hooks) provide the *secret* string from the previous step. Make sure the Webhook point to the right location for the Webhook listener (and that it's reachable)<br>
+In the Webhook setup (organization/settings/hooks) provide the *secret* string from the previous step. Make sure the Webhook points to the correct location (url) for the Webhook listener (and that it's reachable)<br>
 See snap shot of *Webhooks setup section* and *secrets* <br>
 <img alt="GitHub" src="docs/webhook-secret.png" width="10%">
 ___
