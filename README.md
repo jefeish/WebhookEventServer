@@ -32,6 +32,7 @@ Make sure to store that token! It cannot be retrieved again. (you can always reg
 For creating tokens see,  **[GitHub - Creating a personal access token...](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)**
 <br>
 >Make sure to store the token!
+
 ## Create a 'Secret' String for use with GitHub Webhooks
 For security reasons, we only accept incoming requests from our GitHub organization !
 <br>
@@ -41,7 +42,12 @@ For security reasons, we only accept incoming requests from our GitHub organizat
 C8A1A357-5252-452D-B46D-BF9E325A99D6
 ```
 You can provide any 'string' but we recommend using something similar to the 'uuidgen'.<br>
-See snap shot of *Webhooks setup section* for secrets <br>
+
+
+## Create a Webhook in your GitHub Organization
+In your GitHub Organization create a *Webhook* for a specific event (for testing purposes select all events). <br>
+In the Webhook setup (<organization>/settings/hooks) provide the *secret key* from the previous step. Make sure the Webhook point to the right location for the Webhook listener (and that it's reachable)<br>
+See snap shot of *Webhooks setup section* and *secrets* <br>
 <img alt="GitHub" src="docs/webhook-secret.png" width="10%">
 ___
 # Install - The Webhook Listener Server <a id="install"></a>
