@@ -21,8 +21,7 @@ curl https://api.github.com/authorizations \
 ```
 
 >The JSON response contains a section called,<br>
-**"token": "0f8...d84"**
-<br>
+**"token": "0f8...d84"**<br>
 Make sure to store that token! It cannot be retrieved again. (you can always regenerate a token)<br>
 
 <br>
