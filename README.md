@@ -45,8 +45,8 @@ You can provide any 'string' but we recommend using something similar to the 'uu
 
 
 ## Create a Webhook in your GitHub Organization
-In your GitHub Organization create a *Webhook* for a specific event (for testing purposes select all events). <br>
-In the Webhook setup (<organization>/settings/hooks) provide the *secret key* from the previous step. Make sure the Webhook point to the right location for the Webhook listener (and that it's reachable)<br>
+In your GitHub Organization create a *Webhook* for an event (for testing purposes select all events). <br>
+In the Webhook setup (organization/settings/hooks) provide the *secret* string from the previous step. Make sure the Webhook point to the right location for the Webhook listener (and that it's reachable)<br>
 See snap shot of *Webhooks setup section* and *secrets* <br>
 <img alt="GitHub" src="docs/webhook-secret.png" width="10%">
 ___
@@ -113,7 +113,7 @@ webhooks:
     actions:
 
 ```
-### Detailed information of the *'webhooks:'*
+### Detailed information on the *'webhooks:'* section
  | Parameter | Description |
  |---|---|
  | **- event:** |any event listed in https://developer.github.com/webhooks/ |
@@ -144,7 +144,7 @@ Sample:
 Start listening on 0.0.0.0:80
 ```
 The server is now listening on port 80 for incoming GitHub Webhook events !<br>
-NOTE: Ports below 1048 are 'Privileged Ports' and require 'root' privileges
+NOTE: Ports below 1024 are 'Privileged Ports' and require 'root' privileges
 
 ___
 
