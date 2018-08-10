@@ -4,7 +4,7 @@ server:
   log: 'WebhookEventServer.log'
   secret: streng_geheim
   # GitHub API request info
-  token: db6f97583243a7e7399f7864425d8ccc3a2f0f40 
+  token: db6...f40 
   github_api: 'https://api.github.com'
   owner: jefeish
   organization: jchallenge1
