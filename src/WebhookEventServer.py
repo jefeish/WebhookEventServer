@@ -20,9 +20,6 @@ config = {}
 # configure a basic logger
 log = logging.getLogger(__name__)
 
-# these are all the events available in GitHub
-events=('check_run','check_suite','commit_comment','create','delete','deployment','deployment_status','fork','github_app_authorization','gollum','installation','installation_repositories','issue_comment','issues','label','marketplace_purchase','member','membership','milestone','organization','org_block','page_build','project_card','project_column','project','public','pull_request_review_comment','pull_request_review','pull_request','push','repository','repository_vulnerability_alert','release','status','team','team_add','watch')
-
 # Web-Server class
 class RequestHandler(BaseHTTPRequestHandler):
     global config
@@ -126,7 +123,7 @@ def process_webhook_event(headers, payload):
 
     server_config = config['server']
     yml_webhooks = config['webhooks']
-    n = 0
+    num = 0
     event_match = False
     # get 'X-GitHub-Event' from 'headers', this is the 'Webhook event name'
     webhook_event = headers['X-GitHub-Event']
@@ -164,8 +161,8 @@ def process_webhook_event(headers, payload):
                      if actions and len(actions) > 0:
                          # execute all 'actions' listed in yaml for event
                          for action in actions:
-                             n += 1
-                             log.info("action %s : %s" % (n,action))
+                             num += 1
+                             log.info("action %s : %s" % (num,action))
 
                              module_name = action
                              clazz = 'command'
