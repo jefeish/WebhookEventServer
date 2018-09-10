@@ -173,6 +173,26 @@ def process_webhook_event(headers, payload):
 
     return 0
 
+# poorman's xPath for the JSON Webhook event data
+# data: JSON
+# path: string[]
+#
+def find(data, path):
+    # does the query path contain more elements ?
+    if len(path) > 1:
+        e = path.pop(0)
+        # is 'e' an index number
+        if e.isdigit():
+            e = int(e)
+        val = find(data[e], path)
+    else: # last element
+        e = path[0]
+        # is 'e' an index number
+        if e.isdigit():
+            e = int(e)
+        val = (data[e])
+
+    return val
 
 def main():
     global config

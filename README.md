@@ -117,7 +117,7 @@ webhooks:
  | Parameter | Description |
  |---|---|
  | **- event:** |any event listed in https://developer.github.com/webhooks/ |
- | **payload_attrs:** | Any top level Yaml tag, with it's value can be provided here. |
+ | **payload_attrs:** | Any top level Yaml tag, with it's value can be provided here. Sublevel tags can be provided in the form of|
  | **- action:** opened | The Application will use it as a 'filter' to identify a Webhook event more specifically. For possible attributes check the **'Events API payload'** section from https://developer.github.com/webhooks/ |
  | **actions:** | any number of actions can be provided here as long as it exist in the 'modules' folder|
  |     - create_issue | python file in the 'modules' folder|

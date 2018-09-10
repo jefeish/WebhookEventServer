@@ -27,8 +27,14 @@ webhooks:
     actions:
       - create_issue
 
-  - event: issues
-    description: ''
+  # this section is for the 'unit test'
+  - event: repository
+    description: 'UNIT TESTING'
     payload_attrs:
-      - action: closed
+      - action: deleted
+      - repository.name: code-repo
     actions:
+      task:
+        - create_issue
+      shell:
+        - hello_world  
