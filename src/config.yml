@@ -1,10 +1,10 @@
 server:
-  port: 80
+  port: 8888
   bind: 0.0.0.0
   log: 'WebhookEventServer.log'
   secret: streng_geheim
   # GitHub API request info
-  token: db6...f40 
+  token: 9e7aaa62c5a619d5852e872551ffad79e4f27348 
   github_api: 'https://api.github.com'
   owner: jefeish
   organization: jchallenge1
@@ -12,20 +12,6 @@ server:
 # list the Webhook events to respond to
 webhooks:
   # events list from - https://developer.github.com/webhooks/
-  - event: issues
-    description: 'Webhook event, issue opened'
-    # the payload_attr acts as a filter option
-    payload_attrs:
-      - action: opened
-    actions:
-      - notification
-
-  - event: repository
-    description: 'create an issue when a repository gets deleted'
-    payload_attrs:
-      - action: deleted
-    actions:
-      - create_issue
 
   # this section is for the 'unit test'
   - event: repository
@@ -36,5 +22,22 @@ webhooks:
     actions:
       task:
         - create_issue
-      shell:
-        - hello_world  
+      cmd:
+        - echo "hello" > ./test.txt
+
+  - event: issues
+    description: 'Webhook event, issue opened'
+    # the payload_attr acts as a filter option
+    payload_attrs:
+      - action: opened
+    actions:
+      task:
+        - notification
+      
+  - event: repository
+    description: 'create an issue when a repository gets deleted'
+    payload_attrs:
+      - action: deleted
+    actions:
+      task:
+        - create_issue

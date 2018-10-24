@@ -1,6 +1,6 @@
 import unittest
 import requests
-import requests_mock
+import requests_mock 
 
 class TestStringMethods(unittest.TestCase):
 

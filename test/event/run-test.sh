@@ -1,0 +1,1 @@
+curl -X POST --header "X-GitHub-Event: repository" --header "X-Hub-Signature: sha1=9e7aaa62c5a619d5852e872551ffad79e4f27348" --header "X-GitHub-Delivery: 2c46dfe6-9c6d-11e8-8f3e-ef67c853bfaa" -T ./payload.json -v  http://localhost:8888
