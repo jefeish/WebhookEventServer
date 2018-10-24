@@ -4,12 +4,14 @@ import yaml
 import json
 import hmac
 import sys
+import os
 from argparse import ArgumentParser
 from hashlib import sha1
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from logging.handlers import RotatingFileHandler
 import logging
 import requests
+from subprocess import call
 
 # Github API - endpoint
 github_api = ""
@@ -20,8 +22,8 @@ config = {}
 # configure a basic logger
 log = logging.getLogger(__name__)
 
-# these are all the events available in GitHub
-events=('check_run','check_suite','commit_comment','create','delete','deployment','deployment_status','fork','github_app_authorization','gollum','installation','installation_repositories','issue_comment','issues','label','marketplace_purchase','member','membership','milestone','organization','org_block','page_build','project_card','project_column','project','public','pull_request_review_comment','pull_request_review','pull_request','push','repository','repository_vulnerability_alert','release','status','team','team_add','watch')
+# 
+mode = 'prod'
 
 # Web-Server class
 class RequestHandler(BaseHTTPRequestHandler):
@@ -42,7 +44,6 @@ class RequestHandler(BaseHTTPRequestHandler):
     # All GitHub events are of type 'Post'
     #
     def do_POST(self):
-        request_path = self.path
         request_headers = self.headers
         content_length = request_headers.getheaders('content-length')
         length = int(content_length[0]) if content_length else 0
@@ -50,7 +51,10 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         log.debug("Request Header: %s" % request_headers)
 
-        http_code = self.verify_secret(config['server']['secret'], payload)
+        if mode == 'PROD':
+            http_code = self.verify_secret(config['server']['secret'], payload)
+        else:
+            http_code = 0
 
         if http_code != 0:
             self.send_response(http_code)
@@ -122,14 +126,16 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 def process_webhook_event(headers, payload):
-    log.info("\n process_webhook_event \n")
-
     server_config = config['server']
     yml_webhooks = config['webhooks']
-    n = 0
+    num = 0
     event_match = False
     # get 'X-GitHub-Event' from 'headers', this is the 'Webhook event name'
     webhook_event = headers['X-GitHub-Event']
+    log.info("Received Webhook event: %s " % webhook_event)
+    log.debug("Event headers: %s" % headers)
+    log.debug("Event payload: %s" % payload)
+    payload_json = json.loads(payload)
 
     # trigger all registered actions for the webhook event
     # check each event listed in yaml
@@ -138,43 +144,87 @@ def process_webhook_event(headers, payload):
         yml_description = hook['description']
         # does the event, received from Github, match a yaml event ?
         if yml_event == webhook_event:
-            log.info("Found event in yaml: %s" % yml_event)
+            log.debug("Found event in yaml: %s" % yml_event)
             # do we have 'payload_data' to filter on ?
             if hook['payload_attrs']:
                 yml_payload_attrs = hook['payload_attrs']
+                log.debug("payload_attrs: %s " % yml_payload_attrs)
+
                 for data in yml_payload_attrs:
                     log.debug("yml attr data %s: " % data)
-                    # does the data from yaml completely match the webhook payload ?
-                    for key in data:
-                        payload_json = json.loads(payload)
-                        if data[key] == payload_json[key]:
-                            log.info("event: '%s' has matching data point: '%s' " % (yml_event, key))
-                            event_match = True
-                        else:
-                            event_match = False
-                            break
+                    key = data.keys()[0]
+                    val = find(payload_json, key.split('.'))
+
+                    if data[key] == val:
+                        log.debug("event: '%s' has matching data point: '%s' " % (yml_event, key))
+                        event_match = True
+                    else:
+                        event_match = False
+                        break
+
                 # we quit the loop
                 if event_match:
-                     log.info("Found fully matching event: '%s' (%s) " % (yml_event, yml_description))
-                     event_match = False # reset
-                     # check if the event has 'actions' registered
-                     actions = hook['actions']
-                     log.debug("Webhook actions found for event '%s': %s " % (hook, actions))
+                    log.info("Found fully matching event: '%s' (%s) " % (yml_event, yml_description))
+                    event_match = False # reset
+                    # check if the event has 'actions' registered
+                    actions = hook['actions']
+                    log.debug("actions: %s " % actions)
 
-                     if actions and len(actions) > 0:
-                         # execute all 'actions' listed in yaml for event
-                         for action in actions:
-                             n += 1
-                             log.info("action %s : %s" % (n,action))
+                    if 'task' in actions:
+                        tasks = actions['task']
+                        log.debug("Webhook tasks found for event '%s': %s " % (hook, tasks))
 
-                             module_name = action
-                             clazz = 'command'
-                             module = __import__(module_name)
-                             my_class = getattr(module, clazz)
-                             instance = my_class(log, server_config, headers, payload )
-                             instance.execute()
+                        if tasks and len(tasks) > 0:
+                            # execute all 'actions' listed in yaml for event
+                            for action in tasks:
+                                num += 1
+                                log.debug("action %s : %s" % (num,action))
+
+                                module_name = action
+                                clazz = 'command'
+                                module = __import__(module_name)
+                                my_class = getattr(module, clazz)
+                                instance = my_class(log, server_config, headers, payload )
+                                instance.execute()
+
+                    if 'cmd' in actions:
+                        cmds = actions['cmd']
+                        log.info("Webhook cmd's found for event ")
+
+                        if cmds and len(cmds) > 0:    
+                            # execute all 'commands' listed in yaml for event
+                            for cmd in cmds:   
+                                log.info("Executing command: %s " % cmd)               
+                                os.system(cmd)
 
     return 0
+
+# -------------------------------------------------------
+# Description: A poorman's xPath 
+#               Find the provided Path and it's value
+# Params: 
+#   data - json
+#   path - String []
+# 
+# Return:
+#   val - String (if found / nil if not found)
+# -------------------------------------------------------  
+def find(data, path):
+    try:
+        if len(path) > 1:
+            e = path.pop(0)
+            if e.isdigit():
+                e = int(e)
+            val = find(data[e], path)
+        else: # last element
+            e = path[0]
+            if e.isdigit():
+                e = int(e)
+            val = (data[e])
+    except:
+        val = 'nil' # path not found
+
+    return val
 
 
 def main():
@@ -216,8 +266,10 @@ if __name__ == "__main__":
     # setup command line arguments - only one right now is 'log level'
     parser = ArgumentParser()
     parser.add_argument('--loglevel','-l', dest='log_level', default='INFO', help='LOG_LEVEL: <debug|info|warning|error|critical> (default: INFO)')
+    parser.add_argument('--mode','-m', dest='mode', default='prod', help='Running mode, "DEV" mode = ignore security validation  (default mode=PROD)' )
     args = parser.parse_args()
     level = args.log_level.upper()
+    mode = args.mode.upper()
 
     # setup logger
     init_logger(config['server']['log'], level)

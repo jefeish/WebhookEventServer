@@ -1,5 +1,5 @@
-WebhookEventServer.lo*
 *.swp
 notes*
 *.pyc
 .DS_Store
+src/*.log
