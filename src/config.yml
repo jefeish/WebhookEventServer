@@ -23,7 +23,7 @@ webhooks:
       task:
         - create_issue
       cmd:
-        - echo "hello" > ./test.txt
+        - echo "[$(date)] UNIT TESTING, event='repository', action='deleted'" >> ./test.txt
 
   - event: issues
     description: 'Webhook event, issue opened'

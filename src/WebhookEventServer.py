@@ -153,16 +153,19 @@ def process_webhook_event(headers, payload):
                 for data in yml_payload_attrs:
                     log.debug("yml attr data %s: " % data)
                     key = data.keys()[0]
+                    # find an entry in the payload that matches Yaml attributes (just by the key) 
+                    # and return the value from the payload
                     val = find(payload_json, key.split('.'))
 
-                    if data[key] == val:
+                    # does the value from the payload also match the value from the Yaml ?
+                    # OR was there no data match required (Yaml val=None)   
+                    if data[key] == val or data[key] == None:
                         log.debug("event: '%s' has matching data point: '%s' " % (yml_event, key))
                         event_match = True
+                        break # found a fully matching event, go to proccess actions...
                     else:
                         event_match = False
-                        break
 
-                # we quit the loop
                 if event_match:
                     log.info("Found fully matching event: '%s' (%s) " % (yml_event, yml_description))
                     event_match = False # reset
@@ -192,7 +195,7 @@ def process_webhook_event(headers, payload):
                         log.info("Webhook cmd's found for event ")
 
                         if cmds and len(cmds) > 0:    
-                            # execute all 'commands' listed in yaml for event
+                            # execute all 'commands' listed in yaml for the event
                             for cmd in cmds:   
                                 log.info("Executing command: %s " % cmd)               
                                 os.system(cmd)
