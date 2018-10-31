@@ -3,3 +3,4 @@ notes*
 *.pyc
 .DS_Store
 src/*.log
+src/test.txt
