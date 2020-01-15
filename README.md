@@ -3,14 +3,18 @@
 <img alt="GitHub" src="docs/github-logo-small.png"><img alt="GitHub" src="docs/webhook-512.png" width="10%">
 
 
-### This is a 'simple' GitHub Webhook listener application.
-The program accepts all incoming GitHub Webhooks events. It identifies the incoming event and triggers the configured 'task' modules (multiple tasks can be associated per Webhook event).<br>
-The application only processes 'registered' events, configured via a Yaml config file. (see the 'configuration' section for details)<br> <img alt="GitHub" src="docs/webhooks_event_server.png" width="10%">
+## This is a 'simple' GitHub Webhook listener application.
+
+The program accepts all incoming GitHub Webhooks events. It identifies the incoming event and triggers the configured 'task' modules (multiple tasks can be associated per Webhook event).
+
+The application only processes 'registered' events, configured via a Yaml config file. (see the 'configuration' section for details)
+
+![diagram](docs/webhooks_event_server.png)
 >**Note:** The sample setup in this repository listens for 'Delete Repository' events and creates an 'Issue' in another repository, called 'issue-repo'.
 
-### [Install](#install) / [Configure](#configure) / [Run](#run)
+## [Install](#install) / [Configure](#configure) / [Run](#run)
 
-# Setup Requirements
+## Setup Requirements
  ***This application was developed using Python 2.7.10***
 
 ## Create a 'Personal Access Token' in Github
@@ -22,39 +26,50 @@ curl https://api.github.com/authorizations \
 --data '{"scopes":["repo","admin:org","gist","notifications","user"],"note":"MyToken"}'
 ```
 
->The JSON response contains a section called,<br>
-**"token": "0f8...d84"**<br>
-Make sure to store that token! It cannot be retrieved again. (you can always regenerate a token)<br>
+>The JSON response contains a section called,
 
-<br>
+**"token": "0f8...d84"**
 
-**GitHub Website Example** <br>
+Make sure to store that token! It cannot be retrieved again. (you can always regenerate a token)
+
+**GitHub Website Example**
+
 For creating tokens see,  **[GitHub - Creating a personal access token...](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)**
-<br>
+
 >Make sure to store the token!
 
 ## Create a 'Secret' String for use with GitHub Webhooks
+
 For security reasons, we only accept incoming requests from our GitHub organization !
-<br>
+
 **Sample Linux command for a secret string**
-```
+
+```bash
 > uuidgen
 C8A1A357-5252-452D-B46D-BF9E325A99D6
 ```
-You can provide any 'string' but we recommend using something similar to the 'uuidgen'.<br>
+
+You can provide any 'string' but we recommend using something similar to the 'uuidgen'.
 
 
 ## Create a Webhook in your GitHub Organization
-In your GitHub Organization create a *Webhook* for an event (for testing purposes select all events). <br>
-In the Webhook setup (organization/settings/hooks) provide the *secret* string from the previous step. Make sure the Webhook points to the correct location (url) for the Webhook listener (and that it's reachable)<br>
-See snap shot of *Webhooks setup section* and *secrets* <br>
+
+In your GitHub Organization create a *Webhook* for an event (for testing purposes select all events).
+
+In the Webhook setup (organization/settings/hooks) provide the *secret* string from the previous step. Make sure the Webhook points to the correct location (url) for the Webhook listener (and that it's reachable)
+
+See snap shot of *Webhooks setup section* and *secrets* 
+
 <img alt="GitHub" src="docs/webhook-secret.png" width="10%">
 ___
-# Install - The Webhook Listener Server <a id="install"></a>
+
+## Install - The Webhook Listener Server <a id="install"></a>
 
 To install the server, clone this repository and copy all files and subfolders from **src/** to any location where you want to install the application.
-#### Project folder structure:
-```
+
+### Project folder structure:
+
+```bash
 .
 ├── docs
 ├── README.md
@@ -68,7 +83,7 @@ To install the server, clone this repository and copy all files and subfolders f
 ```
 **NOTE:** the 'modules' folder contains the code for Webhook event actions. To see a sample of how to create a Webhook event action, check 'template.py'.
 
-# Configure - The Webhook Listener Server <a id="configure"></a>
+## Configure - The Webhook Listener Server <a id="configure"></a>
 
 All configuration is done via the 'config.yml' file, found in the 'src/' folder. The application behavior is fully defined by the *config.yml* file.
 <br>The config.yml consists of two main parts,
@@ -76,7 +91,8 @@ All configuration is done via the 'config.yml' file, found in the 'src/' folder.
 2. **'webhooks'** section, defining all GitHub events and Webhooks for the application to respond
 
 ### Sample YAML config
-```
+
+```bash
 server:
   port: 80                                            # the port that the application listen for Webhooks
   bind: 0.0.0.0                                       # Application bind IP
@@ -113,7 +129,9 @@ webhooks:
     actions:
 
 ```
+
 ### Detailed information on the *'webhooks:'* section
+
  | Parameter | Description |
  |---|---|
  | **- event:** |any event listed in https://developer.github.com/webhooks/ |
@@ -123,10 +141,11 @@ webhooks:
  |     - create_issue | python file in the 'modules' folder|
  |     - notification | python file in the 'modules' folder|
 
-# Run - The Webhook Listener Server <a id="run"></a>
+## Run - The Webhook Listener Server <a id="run"></a>
 
 ### Application usage help
-```
+
+```bash
 # python WebhookEventServer.py -h
 usage: WebhookEventServer.py [-h] [--loglevel LOG_LEVEL]
 
@@ -138,29 +157,36 @@ optional arguments:
 ```
 
 ### Run the application
+
 Sample:
-```
+
+```bash
 # python WebhookEventServer.py
 Start listening on 0.0.0.0:80
 ```
+
 The server is now listening on port 80 for incoming GitHub Webhook events !<br>
 NOTE: Ports below 1024 are 'Privileged Ports' and require 'root' privileges
 
 ___
 
-# Some Additional Information
+## Some Additional Information
+
 ## How to Create an 'Issue' via the GitHub API
+
 ### Command line sample
-```
+
+```bash
 curl -d "@./data.json" -u jefeish:cc5...cf75  -X POST https
 ://api.github.com/repos/jchallenge1/issue-repo/issues
 ```
+
 * -d payload
 * -u user:token
 
-
 ### Sample payload 'data.json'
-```
+
+```bash
 {
   "title": "Found a bug",
   "body": "@user I'm having a problem with this.",
@@ -172,14 +198,13 @@ curl -d "@./data.json" -u jefeish:cc5...cf75  -X POST https
   ]
 }
 ```
-
 ____
-
 
 ## Requirements for Webhook action implementations
 
 ### Sample 'webhook' code template
-```
+
+```bash
 import requests
 
 global log
