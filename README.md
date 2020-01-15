@@ -4,7 +4,7 @@
 
 
 ### This is a 'simple' GitHub Webhook listener application.
-The program accepts all incoming GitHub Webhooks events. It identifies the incoming event and triggers the configured 'action' modules (multiple actions can be associated per Webhook event).<br>
+The program accepts all incoming GitHub Webhooks events. It identifies the incoming event and triggers the configured 'task' modules (multiple tasks can be associated per Webhook event).<br>
 The application only processes 'registered' events, configured via a Yaml config file. (see the 'configuration' section for details)<br> <img alt="GitHub" src="docs/webhooks_event_server.png" width="10%">
 >**Note:** The sample setup in this repository listens for 'Delete Repository' events and creates an 'Issue' in another repository, called 'issue-repo'.
 
