@@ -1,8 +1,9 @@
 import json
 import requests
 
-
 global log
+
+# implementing a command pattern
 
 # Required class name: 'command'
 class command():
@@ -15,8 +16,8 @@ class command():
         self.payload = payload
         log = logger
 
-    # Required name: 'execute'
-    # implementing a command pattern
+    # Required function name: 'execute'
     def execute(self):
         global log
         # TODO: implement the service
+        # Your code goes here !

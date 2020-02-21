@@ -153,7 +153,8 @@ def process_webhook_event(headers, payload):
                         else:
                             event_match = False
                             break
-                # we quit the loop
+                            # we quit the loop
+
                 if event_match:
                      log.info("Found fully matching event: '%s' (%s) " % (yml_event, yml_description))
                      event_match = False # reset
@@ -162,7 +163,7 @@ def process_webhook_event(headers, payload):
                      log.debug("Webhook actions found for event '%s': %s " % (hook, actions))
 
                      if actions and len(actions) > 0:
-                         # execute all 'actions' listed in yaml for event
+                         # execute all 'actions' for the event, listed in yaml
                          for action in actions:
                              n += 1
                              log.info("action %s : %s" % (n,action))
