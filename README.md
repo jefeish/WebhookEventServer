@@ -14,7 +14,7 @@ Events that are not 'registered' in the Yaml config file (no matches found), are
 
 > **Note:** The sample setup in this repository listens for 'Delete Repository' events and creates an 'Issue' in another repository, called 'issue-headRepo'.
 
-### [Install](#install) / [Configure](#configure) / [Run](#run)
+## [Install](#install) / [Configure](#configure) / [Run](#run)
 
 ## Setup Requirements
 
@@ -175,6 +175,7 @@ Sample:
 # python WebhookEventServer.py
 Start listening on 0.0.0.0:80
 ```
+
 The server is now listening on port 80 for incoming GitHub Webhook events !<br>
 NOTE: Ports below 1024 are 'Privileged Ports' and require 'root' privileges
 
