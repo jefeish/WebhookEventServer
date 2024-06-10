@@ -5,8 +5,5 @@ ARG VARIANT="focal"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
 RUN apt-get update && apt-get upgrade --yes \
-  && apt-get install curl git-lfs python3-pip awscli gnupg2 --yes \
-  && curl -fsSL https://get.pulumi.com | bash \
-  && mv ~/.pulumi/bin/* /usr/bin \
-  && mkdir -p /root/.aws \
+  && apt-get install curl git-lfs python3-pip gnupg2 --yes \
   && export EDITOR=/usr/bin/vi
