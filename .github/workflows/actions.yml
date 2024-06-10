@@ -1,0 +1,30 @@
+name: Python-docs-action
+on:
+  push:
+    branches:
+    - master
+    
+env:
+  VERSION: 1.0
+  ENV: alpha
+
+jobs:
+  build-terraform-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+                   
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8 #install the python needed
+
+    - name: Install 'Pdoc'
+      run: pip3 install pdoc
+   
+    - name: Generate API Docs
+      run: pdoc --html 
+    
