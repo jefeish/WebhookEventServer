@@ -1,3 +1,4 @@
+![Python 3](https://img.shields.io/badge/python-3-blue.svg)
 
 # WebhookEventServer
 
@@ -11,7 +12,7 @@ The application can match events to 'actions' based on their type and specific p
 
 Events that are not 'registered' in the Yaml config file (no matches found), are being ignored. (see the 'configuration' section for details)
 
-![diagram](docs/webhooks_event_server.png)
+![diagram](docs/architecture.svg)
 
 > **Note:** The sample setup in this repository listens for 'Delete Repository' events and creates an 'Issue' in another repository, called 'issue-headRepo'.
 
@@ -21,7 +22,7 @@ Events that are not 'registered' in the Yaml config file (no matches found), are
 
  ***This application was developed using Python 2.7.10***
 
-### Create a 'Personal Access Token' in Github
+### Create a 'Personal Access Token'(PAT) in Github
 
 Required to access the GitHub API.
 
