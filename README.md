@@ -110,7 +110,7 @@ server:
   port: 80                              # the port that the application listen for Webhooks
   bind: 0.0.0.0                         # Application bind IP
   log: 'WebhookEventServer.log'         # log file/location
-  secret: streng_geheim                 # 'random' string (for incoming Webhook requests)
+  secret: top_secret                    # 'random' string (for incoming Webhook requests)
   # GitHub API request info
   token_file: 'token.pat'               # security token storage (replaces 'token')
   token: f7bb2272b...230c1ed9889        # security token (for Github API calls)
