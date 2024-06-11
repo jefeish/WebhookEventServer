@@ -112,6 +112,7 @@ server:
   log: 'WebhookEventServer.log'         # log file/location
   secret: streng_geheim                 # 'random' string (for incoming Webhook requests)
   # GitHub API request info
+  token_file: 'token.pat'               # security token storage (replaces 'token')
   token: f7bb2272b...230c1ed9889        # security token (for Github API calls)
   github_api: 'https://api.github.com'  # GitHub Api endpoint (might be different for on premise)
   owner: jdoe
