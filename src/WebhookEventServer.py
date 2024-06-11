@@ -6,7 +6,7 @@ import hmac
 import sys
 from argparse import ArgumentParser
 from hashlib import sha1
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from logging.handlers import RotatingFileHandler
 import logging
 import requests
@@ -189,10 +189,17 @@ def main():
     server.serve_forever()
 
 
-def pretty_json(data):
-    parsed = json.loads(data)
-    return json.dumps(parsed, indent=4, sort_keys=True)
+# def pretty_json(data):
+#     parsed = json.loads(data)
+#     return json.dumps(parsed, indent=4, sort_keys=True)
 
+def pretty_json(data):
+    # Check if data is already a string, if not, convert it to a JSON string
+    if not isinstance(data, str):
+        data = json.dumps(data, indent=4)
+    # Now data is guaranteed to be a string, so we can safely load and indent it
+    parsed = json.loads(data)
+    return json.dumps(parsed, indent=4)
 
 def init_logger(log_file, level):
     global log
@@ -211,10 +218,27 @@ def init_logger(log_file, level):
 
 if __name__ == "__main__":
     sys.path.append("modules/")
-    # load the yaml configuration
-    ymlDoc = open("config.yml", "r")
-    config = yaml.load(ymlDoc)
-    # setup command line arguments - only one right now is 'log level'
+    # load the yaml configuration safely
+    with open("config.yml", "r") as ymlDoc:
+        config = yaml.safe_load(ymlDoc)
+
+    # Check if 'token_file' is specified and exists
+    if 'token_file' in config['server']:
+        try:
+            with open(config['server']['token_file'], 'r') as token_file:
+                config['server']['token'] = token_file.read().strip()
+        except IOError as e:
+            log.error(f"Failed to read token file: {config['server']['token_file']}")
+            raise Exception("Failed to read token file.") from e
+    elif 'token' in config['server']:
+        # If 'token_file' is not specified or doesn't exist, but 'token' is in config, use it
+        pass
+    else:
+        # If neither 'token_file' nor 'token' is available, log an error and raise an exception
+        log.error("No 'token_file' specified or 'token' provided in config.yml.")
+        raise Exception("Token configuration not found.")
+
+    # Continue with the rest of the setup
     parser = ArgumentParser()
     parser.add_argument('--loglevel','-l', dest='log_level', default='INFO', help='LOG_LEVEL: <debug|info|warning|error|critical> (default: INFO)')
     args = parser.parse_args()

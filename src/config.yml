@@ -2,9 +2,9 @@ server:
   port: 80
   bind: 0.0.0.0
   log: 'WebhookEventServer.log'
-  secret: streng_geheim
+  secret: 'top_secret'
   # GitHub API request info
-  token: db6...f40 
+  token_file: 'token.pat'
   github_api: 'https://api.github.com'
   owner: jefeish
   organization: jchallenge1
